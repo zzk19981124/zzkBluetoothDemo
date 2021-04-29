@@ -2,9 +2,15 @@ package com.example.demobluetooth;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.vise.baseble.ViseBle;
+import com.vise.baseble.callback.scan.IScanCallback;
+import com.vise.baseble.callback.scan.ScanCallback;
+import com.vise.baseble.model.BluetoothLeDevice;
+import com.vise.baseble.model.BluetoothLeDeviceStore;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -12,11 +18,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //确定BLE的可用性
+        ble_is_support();
+
         //使用蓝牙库之前，初始化
         initBlueTooth();
 
-    }
+        //扫描所有设备
+        scanningAllEquipment();
 
+    }
+    private void ble_is_support(){
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            Toast.makeText(this, R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
+            finish();
+        }
+    }
     private void initBlueTooth() {
         //蓝牙相关配置修改
         ViseBle.config()
@@ -30,5 +47,24 @@ public class MainActivity extends AppCompatActivity {
                 .setMaxConnectCount(3);//设置最大连接设备数量
         //蓝牙信息初始化，全局唯一，必须在应用初始化时调用
         ViseBle.getInstance().init(this);
+    }
+
+    private void scanningAllEquipment() {
+        ViseBle.getInstance().startScan(new ScanCallback(new IScanCallback() {
+            @Override
+            public void onDeviceFound(BluetoothLeDevice bluetoothLeDevice) {
+
+            }
+
+            @Override
+            public void onScanFinish(BluetoothLeDeviceStore bluetoothLeDeviceStore) {
+
+            }
+
+            @Override
+            public void onScanTimeout() {
+
+            }
+        }));
     }
 }

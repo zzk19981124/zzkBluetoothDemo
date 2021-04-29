@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">DemoBlueTooth</string>
+    <string name="ble_not_supported">该设备不支持BLE</string>
 </resources>
