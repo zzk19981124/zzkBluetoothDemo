@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.vise.baseble.ViseBle;
@@ -12,8 +13,13 @@ import com.vise.baseble.callback.scan.ScanCallback;
 import com.vise.baseble.model.BluetoothLeDevice;
 import com.vise.baseble.model.BluetoothLeDeviceStore;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
 
+public class MainActivity extends AppCompatActivity {
+    private ListView mListView;
+    private List<BluetoothLeDevice> mDeviceList = new ArrayList<>();
+    private SearchListAdapter mAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,11 +29,13 @@ public class MainActivity extends AppCompatActivity {
 
         //使用蓝牙库之前，初始化
         initBlueTooth();
-
+        //初始化控件
+        initView();
         //扫描所有设备
         scanningAllEquipment();
 
     }
+
     private void ble_is_support(){
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Toast.makeText(this, R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
@@ -49,10 +57,19 @@ public class MainActivity extends AppCompatActivity {
         ViseBle.getInstance().init(this);
     }
 
+    private void initView() {
+        mListView = findViewById(R.id.device_list);
+        mAdapter = new SearchListAdapter(mDeviceList,this);
+        mListView.setAdapter(mAdapter);
+
+    }
+
     private void scanningAllEquipment() {
         ViseBle.getInstance().startScan(new ScanCallback(new IScanCallback() {
             @Override
             public void onDeviceFound(BluetoothLeDevice bluetoothLeDevice) {
+            //初始化数据列表
+            mDeviceList.clear();
 
             }
 
