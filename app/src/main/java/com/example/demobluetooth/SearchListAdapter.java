@@ -35,7 +35,7 @@ public class SearchListAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public BluetoothLeDevice getItem(int position) {
         return mData.get(position);
     }
 
@@ -48,12 +48,12 @@ public class SearchListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View itemView = convertView;
         if (itemView == null){
-            itemView = LayoutInflater.from(mContext).inflate(android.R.layout.simple_list_item_2,parent,false);
+            itemView = LayoutInflater.from(mContext).inflate(R.layout.get_scan_result_layout,parent,false);
         }
-        TextView line1 = itemView.findViewById(android.R.id.text1);
-        TextView line2 = itemView.findViewById(android.R.id.text2);
+        TextView line1 = itemView.findViewById(R.id.name);
+        TextView line2 = itemView.findViewById(R.id.address);
 
-        BluetoothLeDevice device = (BluetoothLeDevice) getItem(position);
+        BluetoothLeDevice device = getItem(position);
         line1.setText(device.getName());
         line2.setText(device.getAddress());
 
