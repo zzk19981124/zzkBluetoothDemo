@@ -11,4 +11,10 @@ import androidx.core.content.ContextCompat;
 * */
 public class AllPermissionHelp {
 
+    private String Permissions[] = {
+        "android.permission.BLUETOOTH_ADMIN"
+            ,"android.permission.BLUETOOTH"
+            ,"android.permission.ACCESS_COARSE_LOCATION"
+            ,"android.permission.ACCESS_FINE_LOCATION"
+    };
 }

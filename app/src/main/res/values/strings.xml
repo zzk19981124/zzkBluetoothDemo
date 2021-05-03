@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">DemoBlueTooth</string>
     <string name="ble_not_supported">该设备不支持BLE</string>
-    <string name="scan_all_device">刷新设备</string>
+    <string name="scan_all_device">开始扫描</string>
     <string name="can_use_device">可用设备</string>
     <string name="no_ofen_use">不常用类型设备</string>
+    <string name="get_permissions">申请权限</string>
 </resources>

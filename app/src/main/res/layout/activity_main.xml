@@ -8,15 +8,24 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
+    <Button
+        android:id="@+id/get_permissions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/get_permissions"
+        android:layout_alignParentTop="true"/>
     <LinearLayout
         android:id="@+id/linear1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_below="@+id/get_permissions">
         <TextView
             android:layout_width="180dp"
             android:layout_height="wrap_content"
-            android:text="@string/can_use_device"/>
+            android:text="@string/can_use_device"
+            android:textSize="18sp"
+            android:textColor="#000000" />
         <Button
             android:id="@+id/scan_device"
             android:layout_width="match_parent"

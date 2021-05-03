@@ -2,10 +2,12 @@ package com.example.demobluetooth.myInterface;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-
 import com.vise.baseble.ViseBle;
+import com.vise.baseble.callback.IConnectCallback;
 import com.vise.baseble.callback.scan.IScanCallback;
 import com.vise.baseble.callback.scan.ScanCallback;
+import com.vise.baseble.core.DeviceMirror;
+import com.vise.baseble.exception.BleException;
 import com.vise.baseble.model.BluetoothLeDevice;
 import com.vise.baseble.model.BluetoothLeDeviceStore;
 
@@ -93,9 +95,27 @@ public class BLEBluetooth implements BaseBluetooth<BluetoothLeDevice> {
         ViseBle.getInstance().stopScan(scanCallback);
         return true;
     }
-
+    //根据设备mac地址直接扫描并连接
     @Override
     public Boolean ConnectDevice(String address) {
+        IConnectCallback iConnectCallback = new IConnectCallback(){
+
+            @Override
+            public void onConnectSuccess(DeviceMirror deviceMirror) {
+                System.out.println("连接成功");
+            }
+
+            @Override
+            public void onConnectFailure(BleException exception) {
+                System.out.println("连接设备失败");
+            }
+
+            @Override
+            public void onDisconnect(boolean isActive) {
+                System.out.println("断开连接");
+            }
+        };
+        ViseBle.getInstance().connectByMac(address,iConnectCallback);
         return true;
     }
 
