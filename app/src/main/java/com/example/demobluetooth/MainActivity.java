@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         initView();
         bindListener();
     }
-
+    //检查动态权限
     private void init(){
         permissionHelper = new PermissionHelper(this, MY_PERMISSION_REQUEST_CODE);
     }
@@ -86,18 +87,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 System.out.println("申请权限");
-//                System.out.println("点击按钮——扫描");
-//                scanningAllEquipment();
                 permissionHelper.startRequestPermissions();
             }
         });
         scanBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //System.out.println("申请权限");
                 System.out.println("点击按钮——扫描");
                 scanningAllEquipment();
-                //permissionHelper.startRequestPermissions();
+            }
+        });
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                bleBluetooth.ConnectDevice(mDeviceList.get(position).getAddress());
             }
         });
     }
@@ -134,7 +137,8 @@ public class MainActivity extends AppCompatActivity {
         mListView.setAdapter(mAdapter);
     }
     private void connectDevice(){
-
+        //bleBluetooth.
+        //bleBluetooth.ConnectDevice()
     }
 
 }

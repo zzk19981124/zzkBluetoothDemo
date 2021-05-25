@@ -2,6 +2,10 @@ package com.example.demobluetooth.myInterface;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.example.demobluetooth.MainActivity;
 import com.vise.baseble.ViseBle;
 import com.vise.baseble.callback.IConnectCallback;
 import com.vise.baseble.callback.scan.IScanCallback;
@@ -23,6 +27,7 @@ public class BLEBluetooth implements BaseBluetooth<BluetoothLeDevice> {
     private List<BluetoothLeDevice> allDevice = new ArrayList<>();
     private Set<String> addressSet = new HashSet<>();
     private ScanCallback scanCallback;
+    private IConnectCallback iConnectCallback;
 
     public BLEBluetooth(Context context) {
         this.context = context;
@@ -98,24 +103,30 @@ public class BLEBluetooth implements BaseBluetooth<BluetoothLeDevice> {
     //根据设备mac地址直接扫描并连接
     @Override
     public Boolean ConnectDevice(String address) {
-        IConnectCallback iConnectCallback = new IConnectCallback(){
+
+        iConnectCallback = new IConnectCallback(){
 
             @Override
             public void onConnectSuccess(DeviceMirror deviceMirror) {
                 System.out.println("连接成功");
+                //Toast.makeText(context,"连接成功",Toast.LENGTH_SHORT).show();
             }
+
 
             @Override
             public void onConnectFailure(BleException exception) {
                 System.out.println("连接设备失败");
+                Log.d("BLEBluetooth", "onConnectFailure: "+exception);
+                //Toast.makeText(context.getApplicationContext(),"连接设备失败",Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onDisconnect(boolean isActive) {
                 System.out.println("断开连接");
+                //Toast.makeText(context,"断开连接",Toast.LENGTH_SHORT).show();
             }
         };
-        ViseBle.getInstance().connectByMac(address,iConnectCallback);
+        ViseBle.getInstance().connectByMac(address, iConnectCallback);
         return true;
     }
 
