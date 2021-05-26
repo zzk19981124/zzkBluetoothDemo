@@ -82,14 +82,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void bindListener(){
+        /*
+        * 检查需要满足的动态权限，如果没有打开权限，会弹窗提示需要用户打开哪些权限
+        * */
         getPerBtn.setText("申请权限");
         getPerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("申请权限");
                 permissionHelper.startRequestPermissions();
             }
         });
+        /*
+        * 扫描所有低功耗蓝牙设备
+        * */
         scanBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

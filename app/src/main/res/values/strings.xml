@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DemoBlueTooth</string>
+    <string name="app_name">阿宽蓝牙工具</string>
     <string name="ble_not_supported">该设备不支持BLE</string>
     <string name="scan_all_device">开始扫描</string>
     <string name="can_use_device">可用设备</string>

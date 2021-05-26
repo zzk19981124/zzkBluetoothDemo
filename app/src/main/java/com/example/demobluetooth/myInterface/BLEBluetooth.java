@@ -100,7 +100,7 @@ public class BLEBluetooth implements BaseBluetooth<BluetoothLeDevice> {
         ViseBle.getInstance().stopScan(scanCallback);
         return true;
     }
-    //根据设备mac地址直接扫描并连接
+    //根据设备信息连接设备
     @Override
     public Boolean ConnectDevice(String address) {
 
