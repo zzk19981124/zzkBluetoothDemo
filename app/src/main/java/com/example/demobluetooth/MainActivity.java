@@ -3,10 +3,13 @@ package com.example.demobluetooth;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -25,10 +28,10 @@ public class MainActivity extends AppCompatActivity {
     private List<BluetoothLeDevice> mDeviceList = new ArrayList<>();
     private SearchListAdapter mAdapter;
     private Button scanBtn,getPerBtn;
-
+    private static final String TAG = "MainActivity";
     private PermissionHelper permissionHelper;
     private final int MY_PERMISSION_REQUEST_CODE = 404;
-
+    private ArrayList<String> stringList = new ArrayList<String>();  //放连接成功后设备的信息
     private BLEBluetooth bleBluetooth;
     private DynamicPermissions dynamicPermissions;
 
@@ -57,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         //初始化控件
         initView();
         bindListener();
+
     }
     //检查动态权限
     private void init(){
@@ -102,10 +106,36 @@ public class MainActivity extends AppCompatActivity {
                 scanningAllEquipment();
             }
         });
+
+        /*
+        * 点击长按监听listView的item，用来连接设备
+        * */
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                //Toast.makeText(MainActivity.this,"长按了第"+position+"个item",Toast.LENGTH_SHORT).show();
+                switch (parent.getId()){
+                    case R.id.device_list:
+                        connectDevice(position);    //连接设备
+                        expressItemClick(position);  //代表你点击了哪个item
+                        break;
+                }
+
+                return false;
+            }
+            public void expressItemClick(int position){
+                stringList.add(bleBluetooth.getAdress());
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this,BleInformationActivity.class);
+                intent.putStringArrayListExtra("ListString",stringList);
+                startActivity(intent);
+            }
+        });
+
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                bleBluetooth.ConnectDevice(mDeviceList.get(position).getAddress());
+                //bleBluetooth.ConnectDevice(mDeviceList.get(position).getAddress());
             }
         });
     }
@@ -130,7 +160,8 @@ public class MainActivity extends AppCompatActivity {
                     handler.sendEmptyMessage(i);
                 }
                 //scanBtn.setText("刷新设备");
-                System.out.println("所有设备：" + mDeviceList);
+                //System.out.println("所有设备：" + mDeviceList);
+                Log.d(TAG, "run: ");
                 //handler.sendEmptyMessage(666);
                 Message msg = new Message();
                 msg.obj = "扫描结束";
@@ -141,9 +172,12 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new SearchListAdapter(mDeviceList, this);
         mListView.setAdapter(mAdapter);
     }
-    private void connectDevice(){
-        //bleBluetooth.
-        //bleBluetooth.ConnectDevice()
+    private void connectDevice(int position){
+        BluetoothLeDevice bluetoothLeDevice = mDeviceList.get(position);
+        //连接设备
+        bleBluetooth.ConnectDevice(bluetoothLeDevice);
+        Log.d(TAG, "连接设备中");
+
     }
 
 }

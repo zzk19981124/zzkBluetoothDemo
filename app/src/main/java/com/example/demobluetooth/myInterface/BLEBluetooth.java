@@ -2,9 +2,11 @@ package com.example.demobluetooth.myInterface;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.demobluetooth.BleConnectActivity;
 import com.example.demobluetooth.MainActivity;
 import com.vise.baseble.ViseBle;
 import com.vise.baseble.callback.IConnectCallback;
@@ -24,14 +26,21 @@ import java.util.TimerTask;
 
 public class BLEBluetooth implements BaseBluetooth<BluetoothLeDevice> {
     private Context context;
-    private List<BluetoothLeDevice> allDevice = new ArrayList<>();
-    private Set<String> addressSet = new HashSet<>();
+    private List<BluetoothLeDevice> allDevice = new ArrayList<>();  //存放抓取到的ble设备
+    private Set<String> addressSet = new HashSet<>();  //存放每个设备的地址信息
     private ScanCallback scanCallback;
     private IConnectCallback iConnectCallback;
-
+    private static final String TAG = "BLEBluetooth";
+    //private ArrayList<String> = new ArrayList<String>();
+    private String IConnectAddress = "";
     public BLEBluetooth(Context context) {
         this.context = context;
         init();
+    }
+
+
+    public String getAdress(){
+        return IConnectAddress;
     }
 
     private void init(){
@@ -102,16 +111,16 @@ public class BLEBluetooth implements BaseBluetooth<BluetoothLeDevice> {
     }
     //根据设备信息连接设备
     @Override
-    public Boolean ConnectDevice(String address) {
+    public Boolean ConnectDevice(BluetoothLeDevice bluetoothLeDevice) {
 
         iConnectCallback = new IConnectCallback(){
 
             @Override
             public void onConnectSuccess(DeviceMirror deviceMirror) {
-                System.out.println("连接成功");
-                //Toast.makeText(context,"连接成功",Toast.LENGTH_SHORT).show();
-            }
+                Log.d(TAG, "-------------准备连接设备----------");
+                IConnectAddress = deviceMirror.getBluetoothLeDevice().getAddress();
 
+            }
 
             @Override
             public void onConnectFailure(BleException exception) {
@@ -126,7 +135,8 @@ public class BLEBluetooth implements BaseBluetooth<BluetoothLeDevice> {
                 //Toast.makeText(context,"断开连接",Toast.LENGTH_SHORT).show();
             }
         };
-        ViseBle.getInstance().connectByMac(address, iConnectCallback);
+
+        ViseBle.getInstance().connect(bluetoothLeDevice, iConnectCallback);
         return true;
     }
 

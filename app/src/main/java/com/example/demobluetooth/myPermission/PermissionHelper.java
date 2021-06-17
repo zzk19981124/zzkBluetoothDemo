@@ -79,7 +79,7 @@ public class PermissionHelper {
 
         if (description.size() == 0) {
             // 如果所有的权限都授予了, 则执行备份代码
-            Toast.makeText(context, "已获取全部权限 - 2" ,Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "已获取全部权限" ,Toast.LENGTH_LONG).show();
 
         } else {
             // 弹出对话框告诉用户需要权限的原因, 并引导用户去应用权限管理中手动打开权限按钮
