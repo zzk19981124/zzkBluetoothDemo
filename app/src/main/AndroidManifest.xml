@@ -16,7 +16,6 @@
         android:roundIcon="@mipmap/blue_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.DemoBlueTooth">
-        <activity android:name=".BleConnectActivity"></activity>
         <activity android:name=".BleInformationActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

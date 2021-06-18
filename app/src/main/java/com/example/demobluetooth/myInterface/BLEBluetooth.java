@@ -1,13 +1,8 @@
 package com.example.demobluetooth.myInterface;
 
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.demobluetooth.BleConnectActivity;
-import com.example.demobluetooth.MainActivity;
 import com.vise.baseble.ViseBle;
 import com.vise.baseble.callback.IConnectCallback;
 import com.vise.baseble.callback.scan.IScanCallback;
