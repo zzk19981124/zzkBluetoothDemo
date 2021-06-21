@@ -18,7 +18,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-
+/*
+*        单例模式
+* */
 public class BLEBluetooth implements BaseBluetooth<BluetoothLeDevice> {
     private Context context;
     private List<BluetoothLeDevice> allDevice = new ArrayList<>();  //存放抓取到的ble设备

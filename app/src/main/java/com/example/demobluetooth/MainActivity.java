@@ -21,7 +21,10 @@ import com.example.demobluetooth.myPermission.BasePermission;
 import com.example.demobluetooth.myPermission.PermissionHelper;
 import com.example.demobluetooth.utils.DynamicPermissions;
 import com.vise.baseble.model.BluetoothLeDevice;
+
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private PermissionHelper permissionHelper;
     private final int MY_PERMISSION_REQUEST_CODE = 404;
     private ArrayList<String> stringList = new ArrayList<String>();  //放连接成功后设备的信息
+    private HashMap<Integer,BluetoothLeDevice> connectResult = new HashMap<Integer, BluetoothLeDevice>();   //抓到device传递到BleinformationActivity
     private BLEBluetooth bleBluetooth;
     private Handler handler = new Handler() {
         @Override
@@ -104,6 +108,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     //点击长按监听listView的item，用来连接设备
+    /*
+    * 使用map把设备传过去
+    *
+    * */
     private void bindItemListener(){
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -112,15 +120,15 @@ public class MainActivity extends AppCompatActivity {
                 switch (parent.getId()){
                     case R.id.device_list:
                         connectDevice(position);    //连接设备
-                        //需要确定点击的item对应的是哪个设备
-
-                        expressItemClick(position);  //代表你点击了哪个item
+                        expressItemClick(position);  //确定点击了哪个item，并传递镜像，然后跳转界面
                         break;
                 }
                 return false;
             }
             public void expressItemClick(int position){
-                stringList.add(bleBluetooth.getAdress());
+                //stringList.add(bleBluetooth.getAdress());
+                //stringList.add(mDeviceList.get(position).getAddress());
+                connectResult.put(0,mDeviceList.get(position));
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -128,7 +136,8 @@ public class MainActivity extends AppCompatActivity {
                             Thread.sleep(3000);
                             Intent intent = new Intent();
                             intent.setClass(MainActivity.this,BleInformationActivity.class);
-                            intent.putStringArrayListExtra("ListString",stringList);
+                            //intent.putStringArrayListExtra("ListString",stringList);
+                            intent.putExtra("message",(Serializable) connectResult);  //启动其序列化功能的接口
                             startActivity(intent);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -173,10 +182,10 @@ public class MainActivity extends AppCompatActivity {
     }
     //连接设备
     private void connectDevice(int position){
-        String text = "你点击了第 " + position + " 个item";
+        //String text = "你点击了第 " + position + " 个item";
         BluetoothLeDevice theDevice = mDeviceList.get(position);
         bleBluetooth.ConnectDevice(theDevice);
-        myToast(text,this);
+        myToast("连接成功",this);
     }
     //toast方法
     public void myToast(String text, Context context){
