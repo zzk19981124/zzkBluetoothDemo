@@ -1,5 +1,7 @@
 package com.example.demobluetooth.myInterface;
 
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattService;
 import android.content.Context;
 import android.util.Log;
 
@@ -7,17 +9,23 @@ import com.vise.baseble.ViseBle;
 import com.vise.baseble.callback.IConnectCallback;
 import com.vise.baseble.callback.scan.IScanCallback;
 import com.vise.baseble.callback.scan.ScanCallback;
+import com.vise.baseble.common.PropertyType;
+import com.vise.baseble.core.BluetoothGattChannel;
 import com.vise.baseble.core.DeviceMirror;
 import com.vise.baseble.exception.BleException;
 import com.vise.baseble.model.BluetoothLeDevice;
 import com.vise.baseble.model.BluetoothLeDeviceStore;
 
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
+
 /*
 *        单例模式
 * */
@@ -25,20 +33,29 @@ public class BLEBluetooth implements BaseBluetooth<BluetoothLeDevice> {
     private Context context;
     private List<BluetoothLeDevice> allDevice = new ArrayList<>();  //存放抓取到的ble设备
     private Set<String> addressSet = new HashSet<>();  //存放每个设备的地址信息
+    //private HashMap<Integer,DeviceMirror> linkedDevice = new HashMap<Integer, DeviceMirror>();
+    private List<DeviceMirror> linkedDevice = new ArrayList<>();
     private ScanCallback scanCallback;
     private IConnectCallback iConnectCallback;
     private static final String TAG = "BLEBluetooth";
+    private static UUID serviceUUID;
+    private static UUID characterUUID;
+    private int needWriteSum = 0;
+    /*
+    * service   uuid  AE5D1E47-5C13-43A08635-82AD38A1381F
+    * character uuid  A2E86C7A-D961-4091-B74F-2409E72EFE26
+    * */
     //private ArrayList<String> = new ArrayList<String>();
-    private String IConnectAddress = "";
+    //private String iConnectAddress = "";
     public BLEBluetooth(Context context) {
         this.context = context;
         init();
     }
 
 
-    public String getAdress(){
-        return IConnectAddress;
-    }
+//    public String getAdress(){
+//        return iConnectAddress;
+//    }
 
     private void init(){
         //蓝牙相关配置修改
@@ -114,22 +131,30 @@ public class BLEBluetooth implements BaseBluetooth<BluetoothLeDevice> {
 
             @Override
             public void onConnectSuccess(DeviceMirror deviceMirror) {
-                Log.d(TAG, "-------------准备连接设备----------");
-                IConnectAddress = deviceMirror.getBluetoothLeDevice().getAddress();
+                linkedDevice.add(deviceMirror);
+                Log.d("link blue", "is ok");
+                getUUIDAndSendData(deviceMirror);
+
+                /*
+                BluetoothGattChannel bluetoothGattChannel = new BluetoothGattChannel.Builder()
+                        .setBluetoothGatt(deviceMirror.getBluetoothGatt())
+                        .setPropertyType(PropertyType.PROPERTY_WRITE)
+                        .setCharacteristicUUID()
+                */
 
             }
 
+
             @Override
             public void onConnectFailure(BleException exception) {
-                System.out.println("连接设备失败");
-                Log.d("BLEBluetooth", "onConnectFailure: "+exception);
-                //Toast.makeText(context.getApplicationContext(),"连接设备失败",Toast.LENGTH_SHORT).show();
+                //System.out.println("连接设备失败");
+                Log.d("link blue", "is fail = "+exception.getDescription());
             }
 
             @Override
             public void onDisconnect(boolean isActive) {
-                System.out.println("断开连接");
-                //Toast.makeText(context,"断开连接",Toast.LENGTH_SHORT).show();
+                //System.out.println("断开连接");
+                Log.d("link blue", "is onDisconnect because:" + isActive);
             }
         };
 
@@ -137,6 +162,21 @@ public class BLEBluetooth implements BaseBluetooth<BluetoothLeDevice> {
         return true;
     }
 
+    private void getUUIDAndSendData(DeviceMirror deviceMirror) {
+        for (int i=0;i<deviceMirror.getBluetoothGatt().getServices().size();i++){
+            BluetoothGattService bluetoothGattServer = deviceMirror.getBluetoothGatt().getServices().get(i);
+            serviceUUID = bluetoothGattServer.getUuid();
+            for (int j = 0;j<bluetoothGattServer.getCharacteristics().size();j++){
+                BluetoothGattCharacteristic characteristic = bluetoothGattServer.getCharacteristics().get(j);
+                characterUUID = characteristic.getUuid();
+                needWriteSum++;
+                //writeToDpjBlooth(deviceMirror,serviceUUID,characterUUID,openLock);
+            }
+        }
+    }
+    private void writeToDpjBlooth(final DeviceMirror deviceMirror,UUID serviceUUID,UUID characterUUID,byte[] openLock){
+        
+    }
     @Override
     public Boolean Disconnect() {
         return true;
@@ -146,4 +186,17 @@ public class BLEBluetooth implements BaseBluetooth<BluetoothLeDevice> {
     public List<BluetoothLeDevice> getAllDevice() {
         return allDevice;
     }
+
+    @Override
+    public Boolean sendMessage(Byte[] data) {
+
+        return true;
+    }
+
+    @Override
+    public List<BluetoothLeDevice> getMessage() {
+        return null;
+    }
+
+
 }

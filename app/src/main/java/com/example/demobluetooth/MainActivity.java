@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (parent.getId()){
                     case R.id.device_list:
                         connectDevice(position);    //连接设备
+                        //这时候有些设备会弹出配对请求
                         expressItemClick(position);  //确定点击了哪个item，并传递镜像，然后跳转界面
                         break;
                 }

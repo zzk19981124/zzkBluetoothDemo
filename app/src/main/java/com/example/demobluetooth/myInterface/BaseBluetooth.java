@@ -15,4 +15,9 @@ public interface BaseBluetooth<T> {
     public Boolean Disconnect();
     // 获取所有设备
     public List<T> getAllDevice();
+
+    // 发送数据
+    public Boolean sendMessage(Byte[] data);
+    //接收数据
+    public List<T> getMessage();
 }
