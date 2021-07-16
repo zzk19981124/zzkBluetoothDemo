@@ -38,24 +38,11 @@ public class BLEBluetooth implements BaseBluetooth<BluetoothLeDevice> {
     private ScanCallback scanCallback;
     private IConnectCallback iConnectCallback;
     private static final String TAG = "BLEBluetooth";
-    private static UUID serviceUUID;
-    private static UUID characterUUID;
     private int needWriteSum = 0;
-    /*
-    * service   uuid  AE5D1E47-5C13-43A08635-82AD38A1381F
-    * character uuid  A2E86C7A-D961-4091-B74F-2409E72EFE26
-    * */
-    //private ArrayList<String> = new ArrayList<String>();
-    //private String iConnectAddress = "";
     public BLEBluetooth(Context context) {
         this.context = context;
         init();
     }
-
-
-//    public String getAdress(){
-//        return iConnectAddress;
-//    }
 
     private void init(){
         //蓝牙相关配置修改
@@ -133,14 +120,7 @@ public class BLEBluetooth implements BaseBluetooth<BluetoothLeDevice> {
             public void onConnectSuccess(DeviceMirror deviceMirror) {
                 linkedDevice.add(deviceMirror);
                 Log.d("link blue", "is ok");
-                getUUIDAndSendData(deviceMirror);
 
-                /*
-                BluetoothGattChannel bluetoothGattChannel = new BluetoothGattChannel.Builder()
-                        .setBluetoothGatt(deviceMirror.getBluetoothGatt())
-                        .setPropertyType(PropertyType.PROPERTY_WRITE)
-                        .setCharacteristicUUID()
-                */
 
             }
 
@@ -162,18 +142,7 @@ public class BLEBluetooth implements BaseBluetooth<BluetoothLeDevice> {
         return true;
     }
 
-    private void getUUIDAndSendData(DeviceMirror deviceMirror) {
-        for (int i=0;i<deviceMirror.getBluetoothGatt().getServices().size();i++){
-            BluetoothGattService bluetoothGattServer = deviceMirror.getBluetoothGatt().getServices().get(i);
-            serviceUUID = bluetoothGattServer.getUuid();
-            for (int j = 0;j<bluetoothGattServer.getCharacteristics().size();j++){
-                BluetoothGattCharacteristic characteristic = bluetoothGattServer.getCharacteristics().get(j);
-                characterUUID = characteristic.getUuid();
-                needWriteSum++;
-                //writeToDpjBlooth(deviceMirror,serviceUUID,characterUUID,openLock);
-            }
-        }
-    }
+
     private void writeToDpjBlooth(final DeviceMirror deviceMirror,UUID serviceUUID,UUID characterUUID,byte[] openLock){
         
     }
