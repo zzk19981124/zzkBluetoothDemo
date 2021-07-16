@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -127,8 +128,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
             public void expressItemClick(int position){
-                //stringList.add(bleBluetooth.getAdress());
-                //stringList.add(mDeviceList.get(position).getAddress());
                 connectResult.put(0,mDeviceList.get(position));
                 new Thread(new Runnable() {
                     @Override
@@ -137,8 +136,10 @@ public class MainActivity extends AppCompatActivity {
                             Thread.sleep(3000);
                             Intent intent = new Intent();
                             intent.setClass(MainActivity.this,BleInformationActivity.class);
-                            //intent.putStringArrayListExtra("ListString",stringList);
-                            intent.putExtra("message",(Serializable) connectResult);  //启动其序列化功能的接口
+                            Bundle bundle = new Bundle();
+                           // bundle.putSerializable("message",  bleBluetooth.getGetResult());
+                            bundle.putParcelable("message", (Parcelable) bleBluetooth.getGetResult());
+                            intent.putExtras(bundle);
                             startActivity(intent);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -172,8 +173,10 @@ public class MainActivity extends AppCompatActivity {
                 //System.out.println("所有设备：" + mDeviceList);
                 Log.d(TAG, "run: ");
                 //handler.sendEmptyMessage(666);
+                int deviceNum = mDeviceList.size();
                 Message msg = new Message();
-                msg.obj = "扫描结束";
+                //msg.obj = "扫描结束";
+                msg.obj = "总共检测到"+deviceNum+"台设备";
                 handler.sendMessage(msg);
             }
         }).start();
@@ -183,10 +186,8 @@ public class MainActivity extends AppCompatActivity {
     }
     //连接设备
     private void connectDevice(int position){
-        //String text = "你点击了第 " + position + " 个item";
-        BluetoothLeDevice theDevice = mDeviceList.get(position);
-        bleBluetooth.ConnectDevice(theDevice);
-        myToast("连接成功",this);
+        bleBluetooth.ConnectDevice(mDeviceList.get(position));
+        //myToast("连接成功",this);
     }
     //toast方法
     public void myToast(String text, Context context){

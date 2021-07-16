@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.vise.baseble.core.DeviceMirror;
 import com.vise.baseble.model.BluetoothLeDevice;
 
 import java.io.InputStream;
@@ -23,37 +24,28 @@ public class BleInformationActivity extends AppCompatActivity {
     private Button get_infor;
     //private ArrayList<String> stringList;
     private HashMap<String,BluetoothLeDevice> getDevice = new HashMap<String,BluetoothLeDevice>();
+    private List<DeviceMirror> getDeviceMirror = new ArrayList<>();
     private Context mContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ble_information);
+        initView();  //初始化控件
+        Intent intent = getIntent();
+        getDeviceMirror = (List<DeviceMirror>) getIntent().getSerializableExtra("message");
+        get_infor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //mTextView.setText(getAllInfo());
+            }
+        });
+    }
+
+    private void initView() {
         mTextView = findViewById(R.id.getAddress);
         get_infor = findViewById(R.id.get_infor);
-        //getDevice = getIntent().getSE
-
-        Intent intent = getIntent();
-        //Bundle bundle = intent.getExtras();
-        //getDevice = (List<BluetoothLeDevice>) bundle.getSerializable("message");
-        getDevice = (HashMap<String,BluetoothLeDevice>) getIntent().getSerializableExtra("message");
-       // stringList = (ArrayList<String>) getIntent().getStringArrayListExtra("ListString");
-        get_infor.setOnClickListener(mOnClickListener);
     }
-    View.OnClickListener mOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            /*String getInfo = printStringList(stringList);
-            if (getInfo.equals("")){
-                Toast.makeText(BleInformationActivity.this,"no no no",
-                        Toast.LENGTH_SHORT).show();
-                return;
-            }
-            mTextView.setText(getInfo);*/
 
-            //getAllInfo();
-            mTextView.setText(getAllInfo());//从设备镜像中获取到需要的数据,并传递给文本框
-        }
-    };
     //从设备镜像中获取到需要的数据
     public String getAllInfo(){
         String result = "";
@@ -77,5 +69,10 @@ public class BleInformationActivity extends AppCompatActivity {
     }
     private void getIntentResult(){
 
+    }
+    private String getDeviceMirror(){
+        String result = "";
+        //String
+        return result;
     }
 }

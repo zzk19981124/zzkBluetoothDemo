@@ -33,12 +33,12 @@ public class BLEBluetooth implements BaseBluetooth<BluetoothLeDevice> {
     private Context context;
     private List<BluetoothLeDevice> allDevice = new ArrayList<>();  //存放抓取到的ble设备
     private Set<String> addressSet = new HashSet<>();  //存放每个设备的地址信息
-    //private HashMap<Integer,DeviceMirror> linkedDevice = new HashMap<Integer, DeviceMirror>();
     private List<DeviceMirror> linkedDevice = new ArrayList<>();
     private ScanCallback scanCallback;
     private IConnectCallback iConnectCallback;
     private static final String TAG = "BLEBluetooth";
     private int needWriteSum = 0;
+    private DeviceMirror getResult;
     public BLEBluetooth(Context context) {
         this.context = context;
         init();
@@ -113,24 +113,19 @@ public class BLEBluetooth implements BaseBluetooth<BluetoothLeDevice> {
     //根据设备信息连接设备
     @Override
     public Boolean ConnectDevice(BluetoothLeDevice bluetoothLeDevice) {
-
         iConnectCallback = new IConnectCallback(){
-
             @Override
             public void onConnectSuccess(DeviceMirror deviceMirror) {
-                linkedDevice.add(deviceMirror);
+                //linkedDevice.add(deviceMirror);
+                getResult = deviceMirror;
+                System.out.println("该设备连接成功");
                 Log.d("link blue", "is ok");
-
-
             }
-
-
             @Override
             public void onConnectFailure(BleException exception) {
                 //System.out.println("连接设备失败");
                 Log.d("link blue", "is fail = "+exception.getDescription());
             }
-
             @Override
             public void onDisconnect(boolean isActive) {
                 //System.out.println("断开连接");
@@ -142,10 +137,6 @@ public class BLEBluetooth implements BaseBluetooth<BluetoothLeDevice> {
         return true;
     }
 
-
-    private void writeToDpjBlooth(final DeviceMirror deviceMirror,UUID serviceUUID,UUID characterUUID,byte[] openLock){
-        
-    }
     @Override
     public Boolean Disconnect() {
         return true;
@@ -167,5 +158,10 @@ public class BLEBluetooth implements BaseBluetooth<BluetoothLeDevice> {
         return null;
     }
 
-
+    public List<DeviceMirror> getLinkedDevice() {
+        return linkedDevice;
+    }
+    public DeviceMirror getGetResult(){
+        return getResult;
+    }
 }
