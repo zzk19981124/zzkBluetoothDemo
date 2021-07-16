@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/left_lienar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="vertical"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/device_bond_state">
+        <TextView
+            android:id="@+id/device_name"
+            android:layout_width="match_parent"
+            android:gravity="center_vertical"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:text="设备名称"
+            android:textStyle="bold"
+            android:textColor="#000"
+            android:textSize="18sp"/>
+        <TextView
+            android:id="@+id/device_address"
+            android:layout_width="match_parent"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_height="20dp"
+            android:text="设备地址"/>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/device_bond_state"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_toLeftOf="@+id/device_rssi"
+        android:gravity="center"
+        android:text="配对状态"/>
+    <TextView
+        android:id="@+id/device_rssi"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:text="信号强度"/>
+</RelativeLayout>
